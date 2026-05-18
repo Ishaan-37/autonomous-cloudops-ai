@@ -1,0 +1,64 @@
+name: Deploy — Staging (EKS)
+
+on:
+  push:
+    branches: [develop]
+  workflow_run:
+    workflows: ["CI — Lint, Type-check, Test"]
+    types: [completed]
+    branches: [develop]
+
+jobs:
+  deploy-staging:
+    name: Deploy to EKS Staging
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    environment: staging
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-eks-deploy
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name cloudops-cluster --region us-east-1
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.14.0"
+
+      - name: Deploy with Helm
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          helm upgrade --install cloudops-agent ./helm/agent \
+            --namespace cloudops-staging \
+            --create-namespace \
+            --set image.tag=$IMAGE_TAG \
+            --set environment=staging \
+            --set replicaCount=1 \
+            --values helm/values.staging.yaml \
+            --wait --timeout=5m
+
+      - name: Run smoke tests against staging
+        run: |
+          STAGING_URL=$(kubectl get svc cloudops-agent \
+            -n cloudops-staging \
+            -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          curl -f http://$STAGING_URL/health || exit 1
+          echo "Staging smoke test passed ✅"
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: '{"text":"❌ Staging deploy failed for ${{ github.sha }}"}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
