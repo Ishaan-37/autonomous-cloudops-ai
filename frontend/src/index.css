@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background:
+      radial-gradient(1200px 600px at 100% -10%, rgba(79,209,197,0.06), transparent),
+      radial-gradient(900px 500px at -10% 110%, rgba(255,138,61,0.05), transparent),
+      #0B0F14;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: rgba(79,209,197,0.25);
+  }
+  *:focus-visible {
+    outline: 2px solid #4FD1C5;
+    outline-offset: 2px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-border rounded-xl;
+  }
+  .eyebrow {
+    @apply font-mono text-xs tracking-widest uppercase text-faint;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
