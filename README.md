@@ -22,20 +22,22 @@ analysis, remediation planning, approval, remediation, and reporting.
 
 ## Full Working Demo Video
 
-[Watch Autonomous CloudOps AI Platform
-Demo](https://drive.google.com/file/d/1Zje8l1uIW45qLUn0nWP6Aw56BLSBObe1/view?usp=drive_link)
+### ▶️ Part 1
+[Watch Autonomous CloudOps AI Platform Demo — Part 1](https://drive.google.com/file/d/1Zje8l1uIW45qLUn0nWP6Aw56BLSBObe1/view?usp=drive_link)
+
+### ▶️ Part 2
+[Watch Autonomous CloudOps AI Platform Demo — Part 2](https://drive.google.com/file/d/1_9MC9aTEWA64moes8mVNaWbhleTUevIF/view?usp=drive_link)
 
 The demonstration covers:
 
--   FastAPI Swagger/OpenAPI workflows
--   CloudWatch alert ingestion
--   AI-agent orchestration using LangGraph
--   RAG-based diagnostic workflows
--   Grafana observability dashboards
--   Incident and remediation workflow visualization
--   AWS infrastructure integration
--   Container and deployment configuration
-
+- FastAPI Swagger/OpenAPI workflows
+- CloudWatch alert ingestion
+- AI-agent orchestration using LangGraph
+- RAG-based diagnostic workflows
+- Grafana observability dashboards
+- Incident and remediation workflow visualization
+- AWS infrastructure integration
+- Container and deployment configuration
 ------------------------------------------------------------------------
 
 # 📸 Platform Screenshots
